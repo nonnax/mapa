@@ -1,0 +1,20 @@
+GIT
+  remote: https://github.com/nonnax/matcha.git
+  revision: dfbf296473347fdfbfa418f01fc945f1a4db93d5
+  specs:
+    matcha (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rack (1.4.7)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  matcha!
+  rack (= 1.4.7)
+
+BUNDLED WITH
+   2.3.12
