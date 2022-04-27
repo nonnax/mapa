@@ -5,8 +5,10 @@ class Mapa
   settings[:layout]=:layout
 
   module View
+    Thread.abort_on_exception = true
     
     PATH=Hash.new{|h,k| h[k]=File.expand_path("#{Mapa.settings[:views]}/#{k}.erb", Dir.pwd)}
+    CACHE=Thread.current[:_view_cache]=Hash.new{|h,k| h[k]=String(IO.read(k))}
     
     def erb(doc, **locals)
       doc, layout = prepare(doc, **locals)
@@ -28,15 +30,12 @@ class Mapa
       l=PATH[Mapa.settings[:layout]]
       if doc.is_a?(Symbol)
         doc = PATH[doc]       
-        doc= _cache[doc]
+        doc = CACHE[doc]
       end
-      layout = _cache[l] rescue '<%=yield%>'
+      layout = CACHE[l] rescue '<%=yield%>'
       [doc, layout]
     end
 
-    def _cache
-      Thread.current[:_view_cache] ||= Hash.new{|h,k| h[k]=IO.read(k) }
-    end    
   end
   include View
 end
