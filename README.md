@@ -1,1 +1,2 @@
-Mapa: a web app router
+Mapa: a little web app router
+renamed because the `matcha` gem name was already taken

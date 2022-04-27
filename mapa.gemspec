@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.name = 'mapa'
   s.version = '0.0.1'
   s.date = '2022-04-27'
-  s.summary = "a mini router"
+  s.summary = "a little web app router"
   s.authors = ["xxanon"]
   s.email = "ironald@gmail.com"
   s.files = `git ls-files`.split("\n") - %w[bin misc]
