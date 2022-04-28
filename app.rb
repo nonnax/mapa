@@ -6,16 +6,12 @@ require_relative 'lib/mapa'
 
 App = Mapa do
   on '/tv' do |params|
-    get do
-      session[:name]='mapa'
-      erb 'watch:tv:', title: 'tv time'
-    end
+    session[:name]='mapa'
+    erb 'watch:tv:', title: 'tv time'
   end
 
   on '/:any' do |any, param|
-    get do
-      erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
-    end
+    erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
   end
 
   on '/login/:name' do |name, params|
@@ -23,7 +19,7 @@ App = Mapa do
       session[:name]=name
       erb 'welcome:'+session[:name]+String(params), title: 'welcome'
     end
-    not_found do
+    not_found(405) do
       erb 'du notto whatto do'
     end
   end

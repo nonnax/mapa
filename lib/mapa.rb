@@ -17,7 +17,7 @@ class Mapa
   def on(u)
     return if @stop || !match(u)
 
-    yield(*[*captures, H[req.params] ])
+    run{ yield(*[*captures, H[req.params] ]) }
     not_found(405) { res.write 'Method Not Allowed' }
     halt res.finish
   end
