@@ -5,23 +5,23 @@ require_relative 'lib/mapa'
 # Mapa.settings[:views]='views'
 
 App = Mapa do
-  on '/tv' do
+  on '/tv' do |params|
     get do
       session[:name]='mapa'
-      erb 'watch:tv', title: 'tv time'
+      erb 'watch:tv:', title: 'tv time'
     end
   end
 
-  on '/:any' do |param|
+  on '/:any', option: 'default' do |any, param|
     get do
-      erb 'watch:' + String(session[:name] || 'movie'), title: 'movie time'
+      erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
     end
   end
 
-  on '/login/:name' do |name|
+  on '/login/:name' do |name, params|
     get do
       session[:name]=name
-      erb 'welcome:'+session[:name], title: 'welcome'
+      erb 'welcome:'+session[:name]+String(params), title: 'welcome'
     end
     not_found do
       erb 'du notto whatto do'

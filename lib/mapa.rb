@@ -5,6 +5,7 @@
 require_relative 'view'
 
 class Mapa
+  H=Hash.new{|h,k| h[k]=k.transform_keys(&:to_sym)}
   class Response < Rack::Response; end
 
   attr :res, :req, :env, :map, :captures
@@ -13,10 +14,10 @@ class Mapa
     @block = block
   end
 
-  def on(u)
+  def on(u, **params)
     return if @stop || !match(u)
 
-    yield(*captures)
+    yield(*[*captures, H[req.params.merge(params)]])
     not_found(405) { res.write 'Method Not Allowed' }
     halt res.finish
   end

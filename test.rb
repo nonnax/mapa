@@ -16,22 +16,30 @@ class TestApp < Test::Unit::TestCase
   def test_root
     get "/"
      assert_equal last_response.status, 404
+     assert_equal last_response.body, 'notto foundo'
   end
+
   def test_root_login
     get "/login/name"
      assert_equal last_response.status, 200
+     assert last_response.body.include?('name')
     post "/login/name"
      assert_equal last_response.status, 404
      assert_equal last_response.body, 'du notto whatto do'
   end
+
   def test_normal
     get "/tv"
      assert_equal last_response.status, 200
   end
+
   def test_any
-    get "/anysegment"
+    get "/anysegment", option: 'default'
+     assert last_response.ok?
      assert_equal last_response.status, 200
+     assert last_response.body.match?('default')
   end
+
   def test_not_found
     get "/first/second"
      assert_equal last_response.status, 404
