@@ -9,6 +9,6 @@ end
 
 desc 'install gem'
 task :install do
-  sh 'gem build mapa.gemspec'
-  sh 'sudo gem install mapa-0.0.1.gem'  
+  sh 'gem build mapr.gemspec'
+  sh 'sudo gem install mapr-0.0.1.gem'
 end

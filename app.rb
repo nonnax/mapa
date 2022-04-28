@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 # Id$ nonnax 2022-04-25 22:40:25 +0800
-require_relative 'lib/mapa'
+require_relative 'lib/mapr'
 
 # Mapa.settings[:views]='views'
 
-App = Mapa do
+App = Mapr do
   on '/tv' do |params|
     session[:name]='mapa'
     erb 'watch:tv:', title: 'tv time'

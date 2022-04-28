@@ -5,30 +5,30 @@ require 'fileutils'
 
 opts={}
 OptionParser.new do |o|
-  o.banner='Usage: matcha --create'
+  o.banner='Usage: mapr --create'
   o.on('-cNAME','--create=NAME')
 end.parse!(into: opts)
 
-def generate(local=opts[:create])  
+def generate(local=opts[:create])
   puts "creating #{local}..."
-  f=File.expand_path('../lib/matcha.rb', __dir__)  
-  css=File.expand_path('../public/css/style.css', __dir__)  
-  layout=File.expand_path('../views/layout.erb', __dir__)  
+  f=File.expand_path('../lib/mapr.rb', __dir__)
+  css=File.expand_path('../public/css/style.css', __dir__)
+  layout=File.expand_path('../views/layout.erb', __dir__)
   index=File.expand_path('../views/index.erb', __dir__)
-  
+
   %w(
     /public/css
     /public/img
     /views
     /lib
   ).each{ |path| FileUtils.mkdir_p File.join(local, path)}
-  
+
   FileUtils.cp f, "#{local}/lib/"
   FileUtils.cp css, "#{local}/public/css/"
   FileUtils.cp [layout, index], "#{local}/views/"
 end
 
-case 
+case
   when local=opts[:create]
     generate(local)
 end

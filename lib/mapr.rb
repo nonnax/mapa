@@ -4,7 +4,7 @@
 # Id$ nonnax 2022-04-25 22:35:06 +0800
 require_relative 'view'
 
-class Mapa
+class Mapr
   H=Hash.new{|h,k| h[k]=k.transform_keys(&:to_sym)}
   class Response < Rack::Response; end
 
@@ -81,6 +81,6 @@ class Mapa
   end
 end
 
-def Mapa(&block)
-  Mapa.new(&block)
+def Mapr(&block)
+  Mapr.new(&block)
 end

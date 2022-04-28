@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'erb'
-class Mapa
+class Mapr
   def self.settings
     @settings ||= Hash.new { |h, k| h[k] = {} }
   end
@@ -11,7 +11,7 @@ class Mapa
   module View
     Thread.abort_on_exception = true
 
-    PATH = Hash.new { |h, k| h[k] = File.expand_path("#{Mapa.settings[:views]}/#{k}.erb", Dir.pwd) }
+    PATH = Hash.new { |h, k| h[k] = File.expand_path("#{Mapr.settings[:views]}/#{k}.erb", Dir.pwd) }
     CACHE = Thread.current[:_view_cache] = Hash.new { |h, k| h[k] = String(IO.read(k)) }
 
     def erb(doc, **locals)
@@ -31,7 +31,7 @@ class Mapa
     end
 
     def prepare(doc, **_locals)
-      ldir =   Mapa.settings[:layout]
+      ldir =   Mapr.settings[:layout]
       doc  =   CACHE[PATH[doc]]  if doc.is_a?(Symbol)
       layout = CACHE[PATH[ldir]] rescue '<%=yield%>'
       [String(doc), layout]
