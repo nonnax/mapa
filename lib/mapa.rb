@@ -1,53 +1,82 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 # Id$ nonnax 2022-04-25 22:35:06 +0800
 require_relative 'view'
 
 class Mapa
-  class Response<Rack::Response; end
+  class Response < Rack::Response; end
+
   attr :res, :req, :env, :map, :captures
+
   def initialize(&block)
-    @block=block
+    @block = block
   end
+
   def on(u)
     return if @stop || !match(u)
+
     yield(*captures)
-    not_found(405){ res.write 'Method Not Allowed' }
+    not_found(405) { res.write 'Method Not Allowed' }
     halt res.finish
   end
+
   def match(u)
     req.path_info.match(pattern(u))
-    .tap{|md| @captures=Array(md&.captures) }
+       .tap { |md| @captures = Array(md&.captures) }
   end
+
   def pattern(u)
     u.gsub(/:\w+/) { '([^/?#]+)' }
      .then { |comp| %r{^#{comp}/?$} }
   end
-  
-  def run(status=200)
+
+  def run(status = 200)
     return if @stop
-    res.status=status
+
+    res.status = status
     yield
-    @stop=true
+    @stop = true
   end
-  def get; run{ yield } if req.get? end
-  def post; run{ yield } if req.post? end
-  def put; run{ yield } if req.put? end
-  def delete; run{ yield } if req.delete? end
-  def not_found(status=404);  run(status){ yield } end
-  
+
+  def get(&block)
+    run(&block) if req.get?
+  end
+
+  def post(&block)
+    run(&block) if req.post?
+  end
+
+  def put(&block)
+    run(&block) if req.put?
+  end
+
+  def delete(&block)
+    run(&block) if req.delete?
+  end
+
+  def not_found(status = 404, &block)
+    run(status, &block)
+  end
+
+  def call(env)
+    @env = env
+    @req = Rack::Request.new(env)
+    @res = Rack::Response.new
+    @stop = false
+    catch(:halt) do
+      instance_eval(&@block)
+      not_found { res.write 'Not Found' }
+      res.finish
+    end
+  end
+
   def halt(response)
     throw :halt, response
   end
-  def call(env)
-    @env=env
-    @req=Rack::Request.new(env)
-    @res=Rack::Response.new
-    @stop=false
-    catch(:halt){
-      instance_eval(&@block)
-      not_found{res.write 'Not Found'}
-      res.finish
-    }    
+
+  def session
+    env['rack.session'] || raise('You need to set up a session middleware. `use Rack::Session`')
   end
 end
 
