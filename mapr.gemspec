@@ -1,6 +1,6 @@
 
 Gem::Specification.new do |s|
-  s.name = 'mmapr'
+  s.name = 'mapr'
   s.version = '0.0.1'
   s.date = '2022-04-27'
   s.summary = "a little web app router"
