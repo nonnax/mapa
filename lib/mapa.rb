@@ -14,10 +14,10 @@ class Mapa
     @block = block
   end
 
-  def on(u, **params)
+  def on(u)
     return if @stop || !match(u)
 
-    yield(*[*captures, H[req.params.merge(params)]])
+    yield(*[*captures, H[req.params] ])
     not_found(405) { res.write 'Method Not Allowed' }
     halt res.finish
   end

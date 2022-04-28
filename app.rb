@@ -12,7 +12,7 @@ App = Mapa do
     end
   end
 
-  on '/:any', option: 'default' do |any, param|
+  on '/:any' do |any, param|
     get do
       erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
     end
