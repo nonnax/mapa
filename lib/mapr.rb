@@ -14,14 +14,6 @@ class Mapr
     @block = block
   end
 
-  def on(u)
-    return if @stop || !match(u)
-
-    run{ yield(*[*captures, H[req.params] ]) }
-    not_found(405) { res.write 'Method Not Allowed' }
-    halt res.finish
-  end
-
   def match(u)
     req.path_info.match(pattern(u))
        .tap { |md| @captures = Array(md&.captures) }
@@ -37,30 +29,25 @@ class Mapr
 
     res.status = status
     yield
-    @stop = true
+    @stop = true unless res.body.empty?
+    halt res.finish if @stop
   end
 
-  def get(&block)
-    run(&block) if req.get?
+  def on(u)
+    run{ yield(*[*captures, H[req.params] ]) } if match(u)
   end
 
-  def post(&block)
-    run(&block) if req.post?
-  end
+  def get(&block) run(&block) if req.get? end
 
-  def put(&block)
-    run(&block) if req.put?
-  end
+  def post(&block) run(&block) if req.post? end
 
-  def delete(&block)
-    run(&block) if req.delete?
-  end
+  def put(&block) run(&block) if req.put? end
 
-  def not_found(status = 404, &block)
-    run(status, &block)
-  end
+  def delete(&block) run(&block) if req.delete? end
 
-  def call(env)
+  def not_found(status = 404, &block) run(status, &block) end
+
+  def call!(env)
     @env = env
     @req = Rack::Request.new(env)
     @res = Rack::Response.new
@@ -70,6 +57,10 @@ class Mapr
       not_found { res.write 'Not Found' }
       res.finish
     end
+  end
+
+  def call(env)
+    dup.call!(env)
   end
 
   def halt(response)

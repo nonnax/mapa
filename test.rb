@@ -15,8 +15,7 @@ class TestApp < Test::Unit::TestCase
 
   def test_root
     get "/"
-     assert_equal last_response.status, 404
-     assert_equal last_response.body, 'notto foundo'
+     assert last_response.ok?
   end
 
   def test_root_login
