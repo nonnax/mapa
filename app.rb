@@ -20,8 +20,10 @@ App = Mapr do
   end
 
   on '/tv' do |params|
-    session[:name]='mapa'
-    erb 'watch:tv:', title: 'tv time'
+    get do
+      session[:name]='mapa'
+      erb 'watch:tv:', title: 'tv time'
+    end
   end
 
   on '/login/:name' do |name, params|
@@ -29,19 +31,21 @@ App = Mapr do
       session[:name]=name
       erb 'welcome:'+session[:name]+String(params), title: 'welcome'
     end
-    not_found(405) do
-      erb 'du notto whatto do'
-    end
+    # not_found(405) do
+      # erb 'du notto whatto do'
+    # end
   end
 
-  get do
-    on '/:any' do |any, param|
+  on '/:any' do |any, param|
+    get do
       erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
     end
   end
 
   on '/' do
-    res.write 'hi'
+    get do
+      res.redirect '/thread'
+    end
   end
 
   not_found do

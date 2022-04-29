@@ -15,7 +15,8 @@ class TestApp < Test::Unit::TestCase
 
   def test_root
     get "/"
-     assert last_response.ok?
+     # assert last_response.ok?
+     assert_equal last_response.status, 302
   end
 
   def test_root_login
@@ -23,8 +24,8 @@ class TestApp < Test::Unit::TestCase
      assert_equal last_response.status, 200
      assert last_response.body.include?('name')
     post "/login/name"
-     assert_equal last_response.status, 405
-     assert_equal last_response.body, 'du notto whatto do'
+     assert_equal last_response.status, 404
+     # assert_equal last_response.body, 'du notto whatto do'
   end
 
   def test_normal

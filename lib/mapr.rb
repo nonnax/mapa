@@ -14,6 +14,13 @@ class Mapr
     @block = block
   end
 
+  def on(u)
+    return if @stop || !match(u)
+    yield(*[*captures, H[req.params] ])
+    not_found{ res.write 'Not Found' }
+    halt res.finish
+  end
+
   def match(u)
     req.path_info.match(pattern(u))
        .tap { |md| @captures = Array(md&.captures) }
@@ -26,15 +33,9 @@ class Mapr
 
   def run(status = 200)
     return if @stop
-
     res.status = status
     yield
-    @stop = true unless res.body.empty?
-    halt res.finish if @stop
-  end
-
-  def on(u)
-    run{ yield(*[*captures, H[req.params] ]) } if match(u)
+    @stop = true
   end
 
   def get(&block) run(&block) if req.get? end
