@@ -6,6 +6,8 @@ require_relative 'view'
 
 class Mapr
   H=Hash.new{|h,k| h[k]=k.transform_keys(&:to_sym)}
+  ALLOWED=Hash[[301, 302, 303,307].product([false])];  ALLOWED.default=true
+
   class Response < Rack::Response; end
 
   attr :res, :req, :env, :map, :captures
@@ -18,9 +20,9 @@ class Mapr
     return if @stop || !match(u)
 
     run{ yield(*[*captures, H[req.params] ]) }
-    if res.body.empty? && res.status != 302
-      res.status = 404
-      res.write 'Not Handled'
+    if res.body.empty? && ALLOWED[res.status]
+      res.status = 405
+      res.write 'Method Not Allowed'
     end
     halt res.finish
   end

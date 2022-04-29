@@ -33,7 +33,7 @@ class TestApp < Test::Unit::TestCase
 
   def test_login_post
     post "/login/name"
-     assert_equal last_response.status, 404
+     assert_equal last_response.status, 405
      # assert_equal last_response.body, 'du notto whatto do'
   end
 
