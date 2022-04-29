@@ -14,7 +14,9 @@ Thread.new do # trivial example work thread
 end
 
 App = Mapr do
-
+  #
+  # path test first
+  #
   on '/thread' do
     res.write "Testing background work thread: sum is #{$sum}"
   end
@@ -26,29 +28,29 @@ App = Mapr do
     end
   end
 
-  on '/login/:name' do |name, params|
-    get do
-      session[:name]=name
-      erb 'welcome:'+session[:name]+String(params), title: 'welcome'
+  # get do
+    on '/login/:name' do |name, params|
+      get do
+        session[:name]=name
+        erb 'welcome:'+session[:name]+String(params), title: 'welcome'
+      end
     end
-    # not_found(405) do
-      # erb 'du notto whatto do'
-    # end
-  end
-
-  on '/:any' do |any, param|
-    get do
+  # end
+  #
+  # method test first
+  #
+  get do
+    on '/:any' do |any, param|
       erb 'watch:' + String(session[:name] || 'movie')+String(param), title: 'movie time'
     end
   end
 
   on '/' do
-    get do
-      res.redirect '/thread'
-    end
+    res.redirect '/thread'
   end
 
   not_found do
     erb 'notto foundo'
   end
+
 end

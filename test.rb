@@ -17,12 +17,21 @@ class TestApp < Test::Unit::TestCase
     get "/"
      # assert last_response.ok?
      assert_equal last_response.status, 302
+
+  end
+  def test_root_post
+    post "/"
+     # assert last_response.ok?
+     assert_equal last_response.status, 302
   end
 
-  def test_root_login
+  def test_login_get
     get "/login/name"
      assert_equal last_response.status, 200
      assert last_response.body.include?('name')
+  end
+
+  def test_login_post
     post "/login/name"
      assert_equal last_response.status, 404
      # assert_equal last_response.body, 'du notto whatto do'
@@ -41,7 +50,7 @@ class TestApp < Test::Unit::TestCase
   end
 
   def test_not_found
-    get "/first/second"
+    get "/adgads/asdfa"
      assert_equal last_response.status, 404
      assert_equal last_response.body, 'notto foundo'
   end

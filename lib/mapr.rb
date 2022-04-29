@@ -16,8 +16,12 @@ class Mapr
 
   def on(u)
     return if @stop || !match(u)
-    yield(*[*captures, H[req.params] ])
-    not_found{ res.write 'Not Found' }
+
+    run{ yield(*[*captures, H[req.params] ]) }
+    if res.body.empty? && res.status != 302
+      res.status = 404
+      res.write 'Not Handled'
+    end
     halt res.finish
   end
 
@@ -31,20 +35,20 @@ class Mapr
      .then { |comp| %r{^#{comp}/?$} }
   end
 
-  def run(status = 200)
+  def run(status = nil)
     return if @stop
-    res.status = status
-    yield
     @stop = true
+    res.status = status if status
+    yield
   end
 
-  def get(&block) run(&block) if req.get? end
+  def get; yield if req.get? end
 
-  def post(&block) run(&block) if req.post? end
+  def post; yield if req.post? end
 
-  def put(&block) run(&block) if req.put? end
+  def put; yield if req.put? end
 
-  def delete(&block) run(&block) if req.delete? end
+  def delete; yield if req.delete? end
 
   def not_found(status = 404, &block) run(status, &block) end
 
